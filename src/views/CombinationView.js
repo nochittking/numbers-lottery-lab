@@ -1,27 +1,22 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import {
-  parseDraws, computeStats, generatePrediction, makeSample, isSample, STRATEGIES,
+  computeStats, generatePrediction, makeSample, STRATEGIES,
 } from "../engine/combination";
 import { loadDraws, saveDraws } from "../lib/storage";
 import { T, cardStyle } from "../theme";
-import { NumberBall, MetricTile, ImportPanel } from "../components/common";
+import { NumberBall, MetricTile } from "../components/common";
+import DataPanel from "../components/DataPanel";
 
 export default function CombinationView({ spec }) {
   const [draws, setDraws] = useState([]);
   const [strategy, setStrategy] = useState("uniform");
   const [prediction, setPrediction] = useState(null);
-  const [showImport, setShowImport] = useState(false);
-  const [importText, setImportText] = useState("");
-  const [msg, setMsg] = useState(null);
 
   // ゲーム切替時にロード（LocalStorage→なければ架空サンプル）
   useEffect(() => {
     const saved = loadDraws(spec.id);
     setDraws(saved && saved.length ? saved : makeSample(spec));
     setPrediction(null);
-    setShowImport(false);
-    setImportText("");
-    setMsg(null);
   }, [spec]);
 
   const persist = useCallback((next) => {
@@ -30,22 +25,8 @@ export default function CombinationView({ spec }) {
   }, [spec.id]);
 
   const stats = useMemo(() => computeStats(draws, spec), [draws, spec]);
-  const usingSample = isSample(draws);
   const color = spec.color;
 
-  const handleImport = (mode) => {
-    const { draws: parsed, errors } = parseDraws(importText, spec);
-    if (!parsed.length) {
-      setMsg({ type: "err", text: errors[0] || "有効なデータが見つかりませんでした。" });
-      return;
-    }
-    const base = mode === "append" ? draws.filter((d) => !isSample([d])) : [];
-    persist([...base, ...parsed]);
-    setImportText("");
-    setMsg({ type: "ok", text: `${parsed.length} 件を取り込みました。${errors.length ? `（${errors.length} 行スキップ）` : ""}` });
-  };
-
-  const handleReset = () => { persist(makeSample(spec)); setMsg({ type: "ok", text: "架空のサンプルに戻しました。" }); };
   const handleGenerate = () => setPrediction(generatePrediction(strategy, stats, spec));
 
   return (
@@ -163,50 +144,9 @@ export default function CombinationView({ spec }) {
         </div>
       )}
 
-      <DataManager
-        spec={spec} color={color} usingSample={usingSample} total={stats.total}
-        showImport={showImport} setShowImport={setShowImport} setMsg={setMsg}
-        importPanel={
-          <ImportPanel
-            color={color}
-            hint={`形式: 回号, 日付, 本数字×${spec.pick}${spec.bonus ? `, ボーナス×${spec.bonus}` : ""}`}
-            placeholder={sampleText(spec)}
-            value={importText} onChange={(e) => setImportText(e.target.value)}
-            onReplace={() => handleImport("replace")} onAppend={() => handleImport("append")}
-            onReset={handleReset} msg={msg}
-          />
-        }
-      />
+      <DataPanel spec={spec} draws={draws} onChange={persist} />
     </>
   );
-}
-
-function DataManager({ spec, color, usingSample, total, showImport, setShowImport, setMsg, importPanel }) {
-  return (
-    <div style={cardStyle}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: showImport ? 12 : 0 }}>
-        <div>
-          <div style={{ fontSize: 9, color: T.textSub, letterSpacing: 3 }}>💾 過去データ管理</div>
-          <div style={{ fontSize: 9, color: usingSample ? T.hot : T.green, marginTop: 4 }}>
-            {usingSample ? "※ 現在は架空のサンプル（実在の当選番号ではありません）" : `${total} 件の取り込みデータを使用中`}
-          </div>
-        </div>
-        <button onClick={() => { setShowImport((v) => !v); setMsg(null); }} style={{
-          background: color + "18", border: `1px solid ${color}66`, color, borderRadius: 8,
-          padding: "7px 12px", fontSize: 9, fontFamily: "inherit", letterSpacing: 1, cursor: "pointer", flexShrink: 0,
-        }}>{showImport ? "閉じる" : "取り込む"}</button>
-      </div>
-      {showImport && importPanel}
-    </div>
-  );
-}
-
-function sampleText(spec) {
-  const ex = [];
-  for (let n = spec.min; n < spec.min + spec.pick; n++) ex.push(n + 2);
-  const b = [];
-  for (let i = 0; i < spec.bonus; i++) b.push(spec.min + spec.pick + 2 + i);
-  return `例:\n500, 2023-01-06, ${ex.join(", ")}${b.length ? ", " + b.join(", ") : ""}`;
 }
 
 function hexToRgb(hex) {

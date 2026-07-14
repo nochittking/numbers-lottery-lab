@@ -51,39 +51,4 @@ export function MetricTile({ label, value, unit, color }) {
   );
 }
 
-// データ取り込みパネル（両エンジン共通）
-export function ImportPanel({ color, placeholder, hint, value, onChange, onReplace, onAppend, onReset, msg }) {
-  const btn = (c) => ({
-    flex: 1, padding: "10px 0",
-    background: c + "16", border: `1px solid ${c}66`, color: c,
-    borderRadius: 9, fontFamily: "inherit", fontSize: 9, letterSpacing: 1, cursor: "pointer",
-  });
-  return (
-    <div style={{ animation: "fadeDown 0.2s ease" }}>
-      <div style={{ fontSize: 9, color: T.textSub, lineHeight: 1.7, marginBottom: 8 }}>
-        公式サイト等で確認した過去の当選番号を1行1回ぶんで貼り付けてください。
-        外部送信は一切行わず、お使いのブラウザ内にのみ保存します。<br />
-        <span style={{ color }}>{hint}</span>
-      </div>
-      <textarea value={value} onChange={onChange} placeholder={placeholder} style={{
-        width: "100%", minHeight: 100, resize: "vertical",
-        background: T.cardInner, border: `1px solid ${T.border}`, borderRadius: 10,
-        color: T.text, fontFamily: "monospace", fontSize: 11, padding: "10px",
-        outline: "none", lineHeight: 1.5,
-      }} />
-      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-        <button onClick={onReplace} style={btn(color)}>置き換えて保存</button>
-        <button onClick={onAppend} style={btn(T.green)}>追加して保存</button>
-        <button onClick={onReset} style={btn(T.textSub)}>サンプルに戻す</button>
-      </div>
-      {msg && (
-        <div style={{
-          marginTop: 10, padding: "8px 10px", borderRadius: 8, fontSize: 9.5,
-          background: (msg.type === "ok" ? T.green : T.hot) + "15",
-          border: `1px solid ${(msg.type === "ok" ? T.green : T.hot)}55`,
-          color: msg.type === "ok" ? T.green : T.hot,
-        }}>{msg.text}</div>
-      )}
-    </div>
-  );
-}
+// ※ データ取込UIは components/DataPanel.js に移動（CSV/OCR/一覧管理対応のため）

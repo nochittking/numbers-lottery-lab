@@ -9,6 +9,10 @@
 # production
 /build
 
+# tesseract.js のローカル同梱アセット（scripts/copy-tesseract-assets.js が
+# npm install 時に node_modules から自動コピーする。コミット不要）
+/public/tesseract
+
 # misc
 .DS_Store
 .env.local
