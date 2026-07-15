@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/numbers-lottery-lab/static/css/main.96f37865.css",
+    "main.js": "/numbers-lottery-lab/static/js/main.0508446d.js",
+    "static/js/628.0c4970ad.chunk.js": "/numbers-lottery-lab/static/js/628.0c4970ad.chunk.js",
+    "static/js/453.b9341a2d.chunk.js": "/numbers-lottery-lab/static/js/453.b9341a2d.chunk.js",
+    "static/js/257.df826bfd.chunk.js": "/numbers-lottery-lab/static/js/257.df826bfd.chunk.js",
+    "service-worker.js": "/numbers-lottery-lab/service-worker.js",
+    "static/media/orbitron-latin-600-normal.woff": "/numbers-lottery-lab/static/media/orbitron-latin-600-normal.8074d3b6c3e157c616e1.woff",
+    "static/media/orbitron-latin-700-normal.woff": "/numbers-lottery-lab/static/media/orbitron-latin-700-normal.db0dab5667f566d734e6.woff",
+    "static/media/orbitron-latin-400-normal.woff": "/numbers-lottery-lab/static/media/orbitron-latin-400-normal.a5ff8cc5b09578a411aa.woff",
+    "static/media/orbitron-latin-900-normal.woff": "/numbers-lottery-lab/static/media/orbitron-latin-900-normal.f8acb0388299396a3886.woff",
+    "static/media/orbitron-latin-600-normal.woff2": "/numbers-lottery-lab/static/media/orbitron-latin-600-normal.898cb6e177f921683416.woff2",
+    "static/media/orbitron-latin-700-normal.woff2": "/numbers-lottery-lab/static/media/orbitron-latin-700-normal.34aedf2c92e720c39130.woff2",
+    "static/media/orbitron-latin-900-normal.woff2": "/numbers-lottery-lab/static/media/orbitron-latin-900-normal.985851f34a50305bc547.woff2",
+    "static/media/orbitron-latin-400-normal.woff2": "/numbers-lottery-lab/static/media/orbitron-latin-400-normal.aa1b8ea4cc46ec30f97f.woff2",
+    "index.html": "/numbers-lottery-lab/index.html",
+    "main.96f37865.css.map": "/numbers-lottery-lab/static/css/main.96f37865.css.map",
+    "main.0508446d.js.map": "/numbers-lottery-lab/static/js/main.0508446d.js.map",
+    "628.0c4970ad.chunk.js.map": "/numbers-lottery-lab/static/js/628.0c4970ad.chunk.js.map",
+    "453.b9341a2d.chunk.js.map": "/numbers-lottery-lab/static/js/453.b9341a2d.chunk.js.map",
+    "257.df826bfd.chunk.js.map": "/numbers-lottery-lab/static/js/257.df826bfd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.96f37865.css",
+    "static/js/main.0508446d.js"
+  ]
+}
