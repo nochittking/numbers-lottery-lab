@@ -2,6 +2,7 @@
   "name": "numbers-lottery-lab",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://nochittking.github.io/numbers-lottery-lab",
   "description": "数字選択くじ（ロト7/6・ミニロト・ナンバーズ）の過去データ統計分析ツール（エンタメ用途）",
   "dependencies": {
     "@fontsource/orbitron": "^5.2.8",
