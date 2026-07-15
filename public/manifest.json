@@ -1,15 +1,34 @@
 {
   "short_name": "くじ統計ラボ",
   "name": "数字選択くじ 統計分析ラボ",
+  "description": "数字選択くじ（ロト7/6・ミニロト・ナンバーズ）の過去データ統計分析ツール（エンタメ用途・当選を保証するものではありません）",
+  "lang": "ja",
   "icons": [
     {
       "src": "favicon.svg",
       "type": "image/svg+xml",
       "sizes": "any"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "logo512-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
+  "orientation": "portrait",
   "theme_color": "#0a0a10",
   "background_color": "#0a0a10"
 }

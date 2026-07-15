@@ -4,6 +4,7 @@
   "private": true,
   "description": "数字選択くじ（ロト7/6・ミニロト・ナンバーズ）の過去データ統計分析ツール（エンタメ用途）",
   "dependencies": {
+    "@fontsource/orbitron": "^5.2.8",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -12,7 +13,12 @@
     "react-dom": "^19.2.5",
     "react-scripts": "5.0.1",
     "tesseract.js": "^6.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "workbox-core": "^7.4.1",
+    "workbox-expiration": "^7.4.1",
+    "workbox-precaching": "^7.4.1",
+    "workbox-routing": "^7.4.1",
+    "workbox-strategies": "^7.4.1"
   },
   "scripts": {
     "postinstall": "node scripts/copy-tesseract-assets.js",
