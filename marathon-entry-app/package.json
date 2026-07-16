@@ -1,0 +1,19 @@
+{
+  "name": "marathon-entry-app",
+  "version": "0.1.0",
+  "description": "国内マラソン大会のエントリー情報を自動リストアップし、エントリー開始日のリマインドを支援するアプリ",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>マラソンエントリー支援 | RaceEntry Navi</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏃</text></svg>">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <h1>🏃 RaceEntry Navi</h1>
+      <p class="tagline">国内マラソン大会のエントリー情報をまとめてチェック。うっかり申込忘れをゼロに。</p>
+      <p class="data-meta" id="dataMeta"></p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="openSection">
+      <h2>🔥 いまエントリーできる大会</h2>
+      <div id="openCards" class="cards"></div>
+    </section>
+
+    <section id="upcomingSection">
+      <h2>⏳ まもなくエントリー開始</h2>
+      <div id="upcomingCards" class="cards"></div>
+    </section>
+
+    <section>
+      <h2>📋 大会一覧</h2>
+      <div class="filters">
+        <input type="search" id="filterQ" placeholder="大会名・開催地で検索">
+        <select id="filterPref"><option value="">都道府県: すべて</option></select>
+        <select id="filterStatus">
+          <option value="">状態: すべて</option>
+          <option>受付中</option>
+          <option>受付前</option>
+          <option>未発表</option>
+          <option>受付終了</option>
+          <option>開催済み</option>
+        </select>
+        <label class="fav-filter"><input type="checkbox" id="filterFav"> ⭐ お気に入りのみ</label>
+        <button id="icsAllBtn" class="btn btn-secondary" title="お気に入り大会のエントリー開始・締切・大会当日をまとめてカレンダー登録">
+          📅 お気に入りを一括カレンダー登録 (.ics)
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table id="raceTable">
+          <thead>
+            <tr>
+              <th>⭐</th>
+              <th>大会名</th>
+              <th>開催日</th>
+              <th>開催地</th>
+              <th>エントリー期間</th>
+              <th>方式</th>
+              <th>参加費</th>
+              <th>状態</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <p>⚠️ 掲載情報はWeb調査に基づくスナップショットです。「要確認」マークの日程は例年実績からの推定を含みます。エントリー前に必ず公式サイトで最新情報をご確認ください。</p>
+    </footer>
+  </main>
+
+  <!-- 大会詳細モーダル -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-body" role="dialog" aria-modal="true">
+      <button class="modal-close" aria-label="閉じる">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
