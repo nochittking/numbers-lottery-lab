@@ -35,6 +35,14 @@ body {
 .app-header h1 { margin: 0 0 4px; font-size: 1.6rem; }
 .tagline { margin: 0; opacity: 0.95; }
 .data-meta { margin: 8px 0 0; font-size: 0.8rem; opacity: 0.85; }
+.notify-btn {
+  margin-top: 10px;
+  background: rgba(255,255,255,0.92);
+  color: var(--primary);
+}
+.notify-btn:hover:not(:disabled) { background: #fff; }
+.notify-btn:disabled { opacity: 0.85; cursor: default; }
+.badge.source { color: #0b7285; background: #e3fafc; font-weight: 500; }
 
 .container { max-width: 1080px; margin: 0 auto; padding: 16px; }
 section { margin-bottom: 32px; }

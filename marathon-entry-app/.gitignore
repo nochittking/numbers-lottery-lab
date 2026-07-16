@@ -1,4 +1,4 @@
 node_modules/
-data/races.local.json
+data/*.local.json
 .env
 *.log

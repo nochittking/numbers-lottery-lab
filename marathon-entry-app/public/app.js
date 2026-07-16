@@ -83,12 +83,79 @@ function gcalUrl({ title, dateIso, allDay, details, location }) {
   return `https://calendar.google.com/calendar/render?${params}`;
 }
 
-// ---------- お気に入り ----------
+// ---------- お気に入り（サーバーのウォッチリストと同期 → 通知対象になる） ----------
+
+async function syncWatchList() {
+  try {
+    await fetch('/api/watch', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: [...state.favorites] }),
+    });
+  } catch { /* オフラインでもUIは動かし続ける */ }
+}
 
 function toggleFavorite(id) {
   state.favorites.has(id) ? state.favorites.delete(id) : state.favorites.add(id);
   localStorage.setItem('favorites', JSON.stringify([...state.favorites]));
+  syncWatchList();
   render();
+}
+
+// ---------- ブラウザプッシュ通知 ----------
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(base64);
+  return Uint8Array.from([...raw].map((c) => c.charCodeAt(0)));
+}
+
+async function enablePushNotifications() {
+  const btn = $('#notifyBtn');
+  try {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      alert('このブラウザはプッシュ通知に対応していません。');
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      alert('通知が許可されませんでした。ブラウザの設定から通知を許可してください。');
+      return;
+    }
+    const reg = await navigator.serviceWorker.register('/sw.js');
+    await navigator.serviceWorker.ready;
+    const { publicKey } = await (await fetch('/api/push/vapid-public-key')).json();
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicKey),
+    });
+    await fetch('/api/push/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sub),
+    });
+    btn.textContent = '🔔 通知ON（このブラウザ）';
+    btn.disabled = true;
+    alert('通知をONにしました！⭐お気に入りの大会について、エントリー開始の7日前・3日前・前日・当日と、締切前にお知らせします。');
+  } catch (err) {
+    alert(`通知の設定に失敗しました: ${err.message}`);
+  }
+}
+
+async function initPushButton() {
+  const btn = $('#notifyBtn');
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    btn.style.display = 'none';
+    return;
+  }
+  const reg = await navigator.serviceWorker.getRegistration();
+  const sub = await reg?.pushManager.getSubscription();
+  if (sub) {
+    btn.textContent = '🔔 通知ON（このブラウザ）';
+    btn.disabled = true;
+  }
+  btn.addEventListener('click', enablePushNotifications);
 }
 
 function favButton(race) {
@@ -155,7 +222,7 @@ function renderTable() {
   $('#raceTable tbody').innerHTML = rows.map((r) => `
     <tr data-race="${r.id}">
       <td>${favButton(r)}</td>
-      <td class="race-name">${escapeHtml(r.name)}<span class="sub">${escapeHtml(r.events?.join(' / ') ?? '')}</span></td>
+      <td class="race-name">${escapeHtml(r.name)}${r.source === 'sportsentry' ? ' <span class="badge source">スポエン</span>' : ''}<span class="sub">${escapeHtml(r.events?.join(' / ') ?? '')}</span></td>
       <td class="nowrap">${fmtDate(r.raceDate)}${r.dateConfirmed === false ? ' <span class="badge unconfirmed">要確認</span>' : ''}</td>
       <td class="nowrap">${escapeHtml(r.prefecture)}<span class="sub">${escapeHtml(r.city ?? '')}</span></td>
       <td>${escapeHtml(entryPeriodText(r))}</td>
@@ -236,12 +303,24 @@ function closeModal() {
 // ---------- 初期化 ----------
 
 async function load() {
+  // サーバー側ウォッチリストとの初期同期（初回はlocalStorageの内容を引き継ぐ）
+  try {
+    const watch = await (await fetch('/api/watch')).json();
+    if (watch.ids.length > 0) {
+      state.favorites = new Set(watch.ids);
+      localStorage.setItem('favorites', JSON.stringify(watch.ids));
+    } else if (state.favorites.size > 0) {
+      syncWatchList();
+    }
+  } catch { /* サーバー同期失敗時はlocalStorageの内容で続行 */ }
+
   const res = await fetch('/api/races');
   const data = await res.json();
   state.races = data.races;
 
   const source = data.updatedFrom ? 'Webフィードから更新' : '同梱データ';
-  $('#dataMeta').textContent = `データ基準日: ${data.generatedAt}（${source}）｜掲載 ${data.count} 大会`;
+  const portal = data.portalCount ? `＋ポータル連携 ${data.portalCount}件` : '';
+  $('#dataMeta').textContent = `データ基準日: ${data.generatedAt}（${source}${portal}）｜掲載 ${data.count} 大会`;
 
   const prefs = [...new Set(state.races.map((r) => r.prefecture))];
   $('#filterPref').innerHTML = '<option value="">都道府県: すべて</option>'
@@ -276,4 +355,5 @@ $('#icsAllBtn').addEventListener('click', () => {
   location.href = `/api/ics?ids=${[...state.favorites].join(',')}`;
 });
 
+initPushButton();
 load();
